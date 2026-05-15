@@ -6,21 +6,50 @@
 <title>Danish &amp; Qistina - Find Your Seat</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-body { margin: 0; padding: 0; font-family: 'Playfair Display', serif; background: #faf7f2; color: #2a2218; }
+/* This forces Playfair Display on EVERYTHING */
+* {
+    font-family: 'Playfair Display', serif !important;
+}
+
+body { margin: 0; padding: 0; background: #faf7f2; color: #2a2218; }
 .page { max-width: 480px; margin: 0 auto; padding: 40px 20px; text-align: center; }
 .tag { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #b8913a; margin-bottom: 10px; font-weight: 700; }
 .couple { font-size: 48px; font-style: italic; font-weight: normal; margin: 0 0 8px; }
 .meta { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #8a7e6e; margin-bottom: 30px; }
 .divider { border: none; border-top: 1px solid #e8dece; margin: 20px auto; width: 200px; }
 .card { background: #fff9f3; border: 1px solid #e8dece; border-radius: 6px; padding: 30px; margin-bottom: 20px; }
-input[type="text"] { width: 100%; box-sizing: border-box; padding: 12px 16px; border: 1px solid #e8dece; border-radius: 4px; font-size: 18px; margin-bottom: 12px; text-align: center; background: #faf7f2; font-family: 'Playfair Display', serif; }
-button { width: 100%; padding: 13px; background: #3a5c3e; color: #f5f0e8; border: none; border-radius: 4px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-family: 'Playfair Display', serif; font-weight: 700; }
+
+input[type="text"] { 
+    width: 100%; 
+    box-sizing: border-box; 
+    padding: 12px 16px; 
+    border: 1px solid #e8dece; 
+    border-radius: 4px; 
+    font-size: 18px; 
+    margin-bottom: 12px; 
+    text-align: center; 
+    background: #faf7f2; 
+}
+
+button { 
+    width: 100%; 
+    padding: 13px; 
+    background: #3a5c3e; 
+    color: #f5f0e8; 
+    border: none; 
+    border-radius: 4px; 
+    font-size: 12px; 
+    letter-spacing: 3px; 
+    text-transform: uppercase; 
+    cursor: pointer; 
+    font-weight: 700; 
+}
 
 /* BALLROOM GRID LAYOUT */
 .ballroom { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; background: #fff; border: 1px solid #e8dece; border-radius: 8px; margin: 20px 0; }
 .stage-label { grid-column: span 3; background: #f0f0f0; padding: 5px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; color: #888; font-weight: 700; }
 
-/* UNIFIED PLAYFAIR FONT FOR ALL TABLE LABELS */
+/* UNIFIED TABLE LABELS */
 .table-icon { 
     width: 48px; 
     height: 48px; 
@@ -32,7 +61,6 @@ button { width: 100%; padding: 13px; background: #3a5c3e; color: #f5f0e8; border
     margin: 0 auto; 
     background: white; 
     transition: 0.3s;
-    font-family: 'Playfair Display', serif;
     font-size: 9px; 
     font-weight: 700;
     text-transform: uppercase;
@@ -51,7 +79,6 @@ button { width: 100%; padding: 13px; background: #3a5c3e; color: #f5f0e8; border
     align-items: center; 
     justify-content: center; 
     z-index: 2;
-    font-family: 'Playfair Display', serif;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -60,7 +87,22 @@ button { width: 100%; padding: 13px; background: #3a5c3e; color: #f5f0e8; border
 .circle-t { top: 60px; left: 60px; width: 100px; height: 100px; border-radius: 50%; }
 .rect-t { top: 70px; left: 20px; width: 180px; height: 80px; border-radius: 4px; }
 .sweet-t { top: 80px; left: 50px; width: 120px; height: 60px; border-radius: 4px; }
-.chair { position: absolute; width: 26px; height: 26px; background: white; border: 1px solid #e8dece; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; z-index: 1; font-family: 'Playfair Display', serif; font-weight: 700; }
+
+.chair { 
+    position: absolute; 
+    width: 26px; 
+    height: 26px; 
+    background: white; 
+    border: 1px solid #e8dece; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 10px; 
+    z-index: 1; 
+    font-weight: 700; 
+}
+
 .glow { background: #b8913a !important; color: white !important; border-color: #8a6d3b !important; transform: scale(1.2); box-shadow: 0 0 15px rgba(184,145,58,0.6); }
 
 .again { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #b8913a; cursor: pointer; text-decoration: underline; display: block; margin-top: 20px; font-weight: 700;}
@@ -148,7 +190,7 @@ function showResult(g) {
 
   document.getElementById('result-area').innerHTML = `
     <div class="result-card"><div class="topbar"></div>
-      <div class="gname">${g.name}</div>
+      <div class="gname" style="font-size: 30px; font-style: italic; margin: 10px 0 20px;">${g.name}</div>
       <div class="tag">Table ${g.table} &middot; Seat ${g.seat}</div>
       <div class="tag">Ballroom Location</div>
       ${ballroomHTML}
