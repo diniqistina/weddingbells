@@ -36,6 +36,14 @@ button:hover { background: #4e7a53; }
 .mi-name { font-size: 16px; font-weight: bold; font-family: Arial, sans-serif; }
 .mi-sub { font-size: 13px; color: #8a7e6e; font-family: Arial, sans-serif; margin-top: 2px; }
 footer { margin-top: 40px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #d8cebc; font-family: Arial, sans-serif; }
+
+/* SEATING MAP STYLES */
+.map-note { font-size: 14px; color: #b8913a; margin: 15px 0; font-style: italic; }
+.ballroom { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; background: #fff; border: 1px solid #e8dece; border-radius: 8px; margin-top: 20px; }
+.stage-area { grid-column: span 3; background: #f0f0f0; padding: 8px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; margin-bottom: 10px; color: #888; }
+.table-circle { width: 50px; height: 50px; border-radius: 50%; border: 1px solid #e8dece; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 14px; background: white; transition: all 0.3s; }
+.vip-table { grid-column: 2; border: 2px solid #b8913a; color: #b8913a; font-weight: bold; }
+.highlight-table { background: #b8913a !important; color: white !important; border-color: #8a6d3b !important; transform: scale(1.2); box-shadow: 0 0 10px rgba(184,145,58,0.5); z-index: 5; }
 </style>
 </head>
 <body>
@@ -57,127 +65,128 @@ footer { margin-top: 40px; font-size: 11px; letter-spacing: 2px; text-transform:
 </div>
 
 <script>
+// Data from your SEATS - Sheet1.csv
 var guests = [
-  {name:"Danish Iryandy",table:"VIP",seat:1},
-  {name:"Qistina Imran",table:"VIP",seat:2},
-  {name:"Hantu Makkau",table:"VIP",seat:3},
-  {name:"Alif Tan",table:"VIP",seat:4},
-  {name:"Mira Lim",table:"VIP",seat:5},
-  {name:"Johan Ng",table:"VIP",seat:6},
-  {name:"Siti Lee",table:"VIP",seat:7},
-  {name:"Faris Wong",table:"VIP",seat:8},
-  {name:"Leena Koh",table:"VIP",seat:9},
-  {name:"Hakim Goh",table:"VIP",seat:10},
-  {name:"Aina Chua",table:"A",seat:1},
-  {name:"Amir Yeo",table:"A",seat:2},
-  {name:"Sara Ong",table:"A",seat:3},
-  {name:"Zaki Teo",table:"A",seat:4},
-  {name:"Nadia Ho",table:"A",seat:5},
-  {name:"Hafiz Kwan",table:"A",seat:6},
-  {name:"Bella Cheong",table:"A",seat:7},
-  {name:"Yusof Tay",table:"A",seat:8},
-  {name:"Izzah Low",table:"A",seat:9},
-  {name:"Raihan Seow",table:"A",seat:10},
-  {name:"Sofea Sim",table:"B",seat:1},
-  {name:"Faiz Chng",table:"B",seat:2},
-  {name:"Nurul Pang",table:"B",seat:3},
-  {name:"Danishah Loh",table:"B",seat:4},
-  {name:"Sophia Foo",table:"B",seat:5},
-  {name:"Felix Chan",table:"B",seat:6},
-  {name:"Nora Lai",table:"B",seat:7},
-  {name:"Daniel Chew",table:"B",seat:8},
-  {name:"Anna Ang",table:"B",seat:9},
-  {name:"Amir Quek",table:"B",seat:10},
-  {name:"Sarah Soon",table:"C",seat:1},
-  {name:"Zach Tanaka",table:"C",seat:2},
-  {name:"Natalie Suzuki",table:"C",seat:3},
-  {name:"Henry Sato",table:"C",seat:4},
-  {name:"Bella Kim",table:"C",seat:5},
-  {name:"Joseph Park",table:"C",seat:6},
-  {name:"Isabel Nguyen",table:"C",seat:7},
-  {name:"Ryan Tran",table:"C",seat:8},
-  {name:"Felix Ali",table:"C",seat:9},
-  {name:"Sophia Hassan",table:"C",seat:10},
-  {name:"Felix Ibrahim",table:"D",seat:1},
-  {name:"Nora Khan",table:"D",seat:2},
-  {name:"Daniel Singh",table:"D",seat:3},
-  {name:"Anna Patel",table:"D",seat:4},
-  {name:"Calum Hood",table:"D",seat:5},
-  {name:"Micheal Clifford",table:"D",seat:6},
-  {name:"Ashton Irwin",table:"D",seat:7},
-  {name:"Luke Hemmings",table:"D",seat:8},
-  {name:"Aiden Fernandez",table:"D",seat:9},
-  {name:"Sophia Ramirez",table:"D",seat:10},
-  {name:"Lucas Gutierrez",table:"E",seat:1},
-  {name:"Emma Mendoza",table:"E",seat:2},
-  {name:"Noah Salazar",table:"E",seat:3},
-  {name:"Olivia Vargas",table:"E",seat:4},
-  {name:"Ethan Navarro",table:"E",seat:5},
-  {name:"Mia Castillo",table:"E",seat:6},
-  {name:"Liam Delgado",table:"E",seat:7},
-  {name:"Ava Reyes",table:"E",seat:8},
-  {name:"Mason Morales",table:"E",seat:9},
-  {name:"Isabella Cruz",table:"E",seat:10},
-  {name:"Logan Santos",table:"F",seat:1},
-  {name:"Charlotte Rivera",table:"F",seat:2},
-  {name:"James Ortiz",table:"F",seat:3},
-  {name:"Amelia Flores",table:"F",seat:4},
-  {name:"Benjamin Ramos",table:"F",seat:5},
-  {name:"Harper Vasquez",table:"F",seat:6},
-  {name:"Elijah Torres",table:"F",seat:7},
-  {name:"Evelyn Molina",table:"F",seat:8},
-  {name:"Daniel Acosta",table:"F",seat:9},
-  {name:"Abigail Silva",table:"F",seat:10},
-  {name:"Matthew Pereira",table:"G",seat:1},
-  {name:"Ella Costa",table:"G",seat:2},
-  {name:"Jackson Ribeiro",table:"G",seat:3},
-  {name:"Scarlett Almeida",table:"G",seat:4},
-  {name:"Sebastian Moreira",table:"G",seat:5},
-  {name:"Grace Barbosa",table:"G",seat:6},
-  {name:"David Nakamura",table:"G",seat:7},
-  {name:"Chloe Yamamoto",table:"G",seat:8},
-  {name:"Joseph Kobayashi",table:"G",seat:9},
-  {name:"Lily Watanabe",table:"G",seat:10},
-  {name:"Samuel Ito",table:"H",seat:1},
-  {name:"Aria Fujita",table:"H",seat:2},
-  {name:"Henry Mori",table:"H",seat:3},
-  {name:"Layla Sakamoto",table:"H",seat:4},
-  {name:"Owen Okada",table:"H",seat:5},
-  {name:"Zoey Hassan",table:"H",seat:6},
-  {name:"Wyatt Abdullah",table:"H",seat:7},
-  {name:"Nora Mahmoud",table:"H",seat:8},
-  {name:"Jack Farouk",table:"H",seat:9},
-  {name:"Hannah Zaki",table:"H",seat:10},
-  {name:"Leo Hussein",table:"I",seat:1},
-  {name:"Avery Omar",table:"I",seat:2},
-  {name:"Julian Youssef",table:"I",seat:3},
-  {name:"Sofia Rahman",table:"I",seat:4},
-  {name:"Luke Chowdhury",table:"I",seat:5},
-  {name:"Camila Ahmed",table:"I",seat:6},
-  {name:"Isaac Das",table:"I",seat:7},
-  {name:"Aurora Bose",table:"I",seat:8},
-  {name:"Gabriel Iyer",table:"I",seat:9},
-  {name:"Victoria Reddy",table:"I",seat:10},
-  {name:"Anthony Sharma",table:"J",seat:1},
-  {name:"Riley Mehta",table:"J",seat:2},
-  {name:"Dylan Kapoor",table:"J",seat:3},
-  {name:"Penelope Verma",table:"J",seat:4},
-  {name:"Andrew Cheng",table:"J",seat:5},
-  {name:"Luna Zhang",table:"J",seat:6},
-  {name:"Joshua Liu",table:"J",seat:7},
-  {name:"Ellie Wang",table:"J",seat:8},
-  {name:"Christopher Chen",table:"J",seat:9},
-  {name:"Stella Huang",table:"J",seat:10},
-  {name:"Nathan Lin",table:"K",seat:1},
-  {name:"Hazel Zhou",table:"K",seat:2},
-  {name:"Caleb Wu",table:"K",seat:3},
-  {name:"Paisley Li",table:"K",seat:4},
-  {name:"Ryan Xu",table:"K",seat:5},
-  {name:"Violet Zhao",table:"K",seat:6},
-  {name:"Adrian Yang",table:"K",seat:7},
-  {name:"Naomi Sun",table:"K",seat:8},
-  {name:"Thomas Gupta",table:"K",seat:9},
-  {name:"Elena Nair",table:"K",seat:10}
+  {name:"Danish Iryandy",table:"VIP",seat:1,note:"Side closest to the stage"},
+  {name:"Qistina Imran",table:"VIP",seat:2,note:"Side closest to the stage"},
+  {name:"Hantu Makkau",table:"VIP",seat:3,note:"Side closest to the stage"},
+  {name:"Alif Tan",table:"VIP",seat:4,note:"Side closest to the stage"},
+  {name:"Mira Lim",table:"VIP",seat:5,note:"Side closest to the stage"},
+  {name:"Johan Ng",table:"VIP",seat:6,note:"Side facing the entrance"},
+  {name:"Siti Lee",table:"VIP",seat:7,note:"Side facing the entrance"},
+  {name:"Faris Wong",table:"VIP",seat:8,note:"Side facing the entrance"},
+  {name:"Leena Koh",table:"VIP",seat:9,note:"Side facing the entrance"},
+  {name:"Hakim Goh",table:"VIP",seat:10,note:"Side facing the entrance"},
+  {name:"Aina Chua",table:"A",seat:1,note:"Side closest to the stage"},
+  {name:"Amir Yeo",table:"A",seat:2,note:"Side closest to the stage"},
+  {name:"Sara Ong",table:"A",seat:3,note:"Side closest to the stage"},
+  {name:"Zaki Teo",table:"A",seat:4,note:"Side closest to the stage"},
+  {name:"Nadia Ho",table:"A",seat:5,note:"Side closest to the stage"},
+  {name:"Hafiz Kwan",table:"A",seat:6,note:"Side facing the entrance"},
+  {name:"Bella Cheong",table:"A",seat:7,note:"Side facing the entrance"},
+  {name:"Yusof Tay",table:"A",seat:8,note:"Side facing the entrance"},
+  {name:"Izzah Low",table:"A",seat:9,note:"Side facing the entrance"},
+  {name:"Raihan Seow",table:"A",seat:10,note:"Side facing the entrance"},
+  {name:"Sofea Sim",table:"B",seat:1,note:"Side closest to the stage"},
+  {name:"Faiz Chng",table:"B",seat:2,note:"Side closest to the stage"},
+  {name:"Nurul Pang",table:"B",seat:3,note:"Side closest to the stage"},
+  {name:"Danishah Loh",table:"B",seat:4,note:"Side closest to the stage"},
+  {name:"Sophia Foo",table:"B",seat:5,note:"Side closest to the stage"},
+  {name:"Felix Chan",table:"B",seat:6,note:"Side facing the entrance"},
+  {name:"Nora Lai",table:"B",seat:7,note:"Side facing the entrance"},
+  {name:"Daniel Chew",table:"B",seat:8,note:"Side facing the entrance"},
+  {name:"Anna Ang",table:"B",seat:9,note:"Side facing the entrance"},
+  {name:"Amir Quek",table:"B",seat:10,note:"Side facing the entrance"},
+  {name:"Sarah Soon",table:"C",seat:1,note:"Side closest to the stage"},
+  {name:"Zach Tanaka",table:"C",seat:2,note:"Side closest to the stage"},
+  {name:"Natalie Suzuki",table:"C",seat:3,note:"Side closest to the stage"},
+  {name:"Henry Sato",table:"C",seat:4,note:"Side closest to the stage"},
+  {name:"Bella Kim",table:"C",seat:5,note:"Side closest to the stage"},
+  {name:"Joseph Park",table:"C",seat:6,note:"Side facing the entrance"},
+  {name:"Isabel Nguyen",table:"C",seat:7,note:"Side facing the entrance"},
+  {name:"Ryan Tran",table:"C",seat:8,note:"Side facing the entrance"},
+  {name:"Felix Ali",table:"C",seat:9,note:"Side facing the entrance"},
+  {name:"Sophia Hassan",table:"C",seat:10,note:"Side facing the entrance"},
+  {name:"Felix Ibrahim",table:"D",seat:1,note:"Side closest to the stage"},
+  {name:"Nora Khan",table:"D",seat:2,note:"Side closest to the stage"},
+  {name:"Daniel Singh",table:"D",seat:3,note:"Side closest to the stage"},
+  {name:"Anna Patel",table:"D",seat:4,note:"Side closest to the stage"},
+  {name:"Calum Hood",table:"D",seat:5,note:"Side closest to the stage"},
+  {name:"Micheal Clifford",table:"D",seat:6,note:"Side facing the entrance"},
+  {name:"Ashton Irwin",table:"D",seat:7,note:"Side facing the entrance"},
+  {name:"Luke Hemmings",table:"D",seat:8,note:"Side facing the entrance"},
+  {name:"Aiden Fernandez",table:"D",seat:9,note:"Side facing the entrance"},
+  {name:"Sophia Ramirez",table:"D",seat:10,note:"Side facing the entrance"},
+  {name:"Lucas Gutierrez",table:"E",seat:1,note:"Side closest to the stage"},
+  {name:"Emma Mendoza",table:"E",seat:2,note:"Side closest to the stage"},
+  {name:"Noah Salazar",table:"E",seat:3,note:"Side closest to the stage"},
+  {name:"Olivia Vargas",table:"E",seat:4,note:"Side closest to the stage"},
+  {name:"Ethan Navarro",table:"E",seat:5,note:"Side closest to the stage"},
+  {name:"Mia Castillo",table:"E",seat:6,note:"Side facing the entrance"},
+  {name:"Liam Delgado",table:"E",seat:7,note:"Side facing the entrance"},
+  {name:"Ava Reyes",table:"E",seat:8,note:"Side facing the entrance"},
+  {name:"Mason Morales",table:"E",seat:9,note:"Side facing the entrance"},
+  {name:"Isabella Cruz",table:"E",seat:10,note:"Side facing the entrance"},
+  {name:"Logan Santos",table:"F",seat:1,note:"Side closest to the stage"},
+  {name:"Charlotte Rivera",table:"F",seat:2,note:"Side closest to the stage"},
+  {name:"James Ortiz",table:"F",seat:3,note:"Side closest to the stage"},
+  {name:"Amelia Flores",table:"F",seat:4,note:"Side closest to the stage"},
+  {name:"Benjamin Ramos",table:"F",seat:5,note:"Side closest to the stage"},
+  {name:"Harper Vasquez",table:"F",seat:6,note:"Side facing the entrance"},
+  {name:"Elijah Torres",table:"F",seat:7,note:"Side facing the entrance"},
+  {name:"Evelyn Molina",table:"F",seat:8,note:"Side facing the entrance"},
+  {name:"Daniel Acosta",table:"F",seat:9,note:"Side facing the entrance"},
+  {name:"Abigail Silva",table:"F",seat:10,note:"Side facing the entrance"},
+  {name:"Matthew Pereira",table:"G",seat:1,note:"Side closest to the stage"},
+  {name:"Ella Costa",table:"G",seat:2,note:"Side closest to the stage"},
+  {name:"Jackson Ribeiro",table:"G",seat:3,note:"Side closest to the stage"},
+  {name:"Scarlett Almeida",table:"G",seat:4,note:"Side closest to the stage"},
+  {name:"Sebastian Moreira",table:"G",seat:5,note:"Side closest to the stage"},
+  {name:"Grace Barbosa",table:"G",seat:6,note:"Side facing the entrance"},
+  {name:"David Nakamura",table:"G",seat:7,note:"Side facing the entrance"},
+  {name:"Chloe Yamamoto",table:"G",seat:8,note:"Side facing the entrance"},
+  {name:"Joseph Kobayashi",table:"G",seat:9,note:"Side facing the entrance"},
+  {name:"Lily Watanabe",table:"G",seat:10,note:"Side facing the entrance"},
+  {name:"Samuel Ito",table:"H",seat:1,note:"Side closest to the stage"},
+  {name:"Aria Fujita",table:"H",seat:2,note:"Side closest to the stage"},
+  {name:"Henry Mori",table:"H",seat:3,note:"Side closest to the stage"},
+  {name:"Layla Sakamoto",table:"H",seat:4,note:"Side closest to the stage"},
+  {name:"Owen Okada",table:"H",seat:5,note:"Side closest to the stage"},
+  {name:"Zoey Hassan",table:"H",seat:6,note:"Side facing the entrance"},
+  {name:"Wyatt Abdullah",table:"H",seat:7,note:"Side facing the entrance"},
+  {name:"Nora Mahmoud",table:"H",seat:8,note:"Side facing the entrance"},
+  {name:"Jack Farouk",table:"H",seat:9,note:"Side facing the entrance"},
+  {name:"Hannah Zaki",table:"H",seat:10,note:"Side facing the entrance"},
+  {name:"Leo Hussein",table:"I",seat:1,note:"Side closest to the stage"},
+  {name:"Avery Omar",table:"I",seat:2,note:"Side closest to the stage"},
+  {name:"Julian Youssef",table:"I",seat:3,note:"Side closest to the stage"},
+  {name:"Sofia Rahman",table:"I",seat:4,note:"Side closest to the stage"},
+  {name:"Luke Chowdhury",table:"I",seat:5,note:"Side closest to the stage"},
+  {name:"Camila Ahmed",table:"I",seat:6,note:"Side facing the entrance"},
+  {name:"Isaac Das",table:"I",seat:7,note:"Side facing the entrance"},
+  {name:"Aurora Bose",table:"I",seat:8,note:"Side facing the entrance"},
+  {name:"Gabriel Iyer",table:"I",seat:9,note:"Side facing the entrance"},
+  {name:"Victoria Reddy",table:"I",seat:10,note:"Side facing the entrance"},
+  {name:"Anthony Sharma",table:"J",seat:1,note:"Side closest to the stage"},
+  {name:"Riley Mehta",table:"J",seat:2,note:"Side closest to the stage"},
+  {name:"Dylan Kapoor",table:"J",seat:3,note:"Side closest to the stage"},
+  {name:"Penelope Verma",table:"J",seat:4,note:"Side closest to the stage"},
+  {name:"Andrew Cheng",table:"J",seat:5,note:"Side closest to the stage"},
+  {name:"Luna Zhang",table:"J",seat:6,note:"Side facing the entrance"},
+  {name:"Joshua Liu",table:"J",seat:7,note:"Side facing the entrance"},
+  {name:"Ellie Wang",table:"J",seat:8,note:"Side facing the entrance"},
+  {name:"Christopher Chen",table:"J",seat:9,note:"Side facing the entrance"},
+  {name:"Stella Huang",table:"J",seat:10,note:"Side facing the entrance"},
+  {name:"Nathan Lin",table:"K",seat:1,note:"Side closest to the stage"},
+  {name:"Hazel Zhou",table:"K",seat:2,note:"Side closest to the stage"},
+  {name:"Caleb Wu",table:"K",seat:3,note:"Side closest to the stage"},
+  {name:"Paisley Li",table:"K",seat:4,note:"Side closest to the stage"},
+  {name:"Ryan Xu",table:"K",seat:5,note:"Side closest to the stage"},
+  {name:"Violet Zhao",table:"K",seat:6,note:"Side facing the entrance"},
+  {name:"Adrian Yang",table:"K",seat:7,note:"Side facing the entrance"},
+  {name:"Naomi Sun",table:"K",seat:8,note:"Side facing the entrance"},
+  {name:"Thomas Gupta",table:"K",seat:9,note:"Side facing the entrance"},
+  {name:"Elena Nair",table:"K",seat:10,note:"Side facing the entrance"}
 ];
 
 var multi = [];
@@ -212,12 +221,38 @@ function doSearch() {
 function pick(i) { showResult(multi[i]); }
 
 function showResult(g) {
+  var mapHTML = `
+    <div class="map-note">Your seat is ${g.note}</div>
+    <div class="ballroom">
+        <div class="stage-area">Stage / Pelamin</div>
+        <div class="table-circle vip-table" id="map-VIP">VIP</div>
+        <div class="table-circle" id="map-A">A</div>
+        <div class="table-circle" id="map-B">B</div>
+        <div class="table-circle" id="map-C">C</div>
+        <div class="table-circle" id="map-D">D</div>
+        <div class="table-circle" id="map-E">E</div>
+        <div class="table-circle" id="map-F">F</div>
+        <div class="table-circle" id="map-G">G</div>
+        <div class="table-circle" id="map-H">H</div>
+        <div class="table-circle" id="map-I">I</div>
+        <div class="table-circle" id="map-J">J</div>
+        <div class="table-circle" id="map-K">K</div>
+    </div>
+  `;
+
   document.getElementById('result-area').innerHTML =
     '<div class="result-card"><div class="topbar"></div>' +
     '<div class="welcome">Welcome</div>' +
     '<div class="gname">' + g.name + '</div>' +
-    '<div class="seat-block"><div class="seat-label">Your Table</div><div class="table-name">' + g.table + '</div><div class="seat-num">Seat ' + g.seat + '</div></div><br><br>' +
+    '<div class="seat-block"><div class="seat-label">Your Table</div><div class="table-name">' + g.table + '</div><div class="seat-num">Seat ' + g.seat + '</div></div>' +
+    mapHTML + '<br><br>' +
     '<span class="again" onclick="reset()">Search for another guest</span></div>';
+
+  // Highlight the table on the map
+  setTimeout(() => {
+    const target = document.getElementById('map-' + g.table);
+    if (target) target.classList.add('highlight-table');
+  }, 100);
 }
 
 function reset() {
