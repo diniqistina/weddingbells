@@ -12,29 +12,22 @@ body { margin: 0; padding: 0; font-family: Georgia, serif; background: #faf7f2; 
 .meta { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #8a7e6e; font-family: Arial, sans-serif; margin-bottom: 30px; }
 .divider { border: none; border-top: 1px solid #e8dece; margin: 20px auto; width: 200px; }
 .card { background: #fff9f3; border: 1px solid #e8dece; border-radius: 6px; padding: 30px; margin-bottom: 20px; }
-.card p { font-size: 14px; color: #8a7e6e; font-family: Arial, sans-serif; margin: 0 0 20px; line-height: 1.6; }
-input[type="text"] { width: 100%; box-sizing: border-box; padding: 12px 16px; border: 1px solid #e8dece; border-radius: 4px; font-size: 18px; font-family: Georgia, serif; text-align: center; background: #faf7f2; color: #2a2218; margin-bottom: 12px; display: block; }
-button { width: 100%; padding: 13px; background: #3a5c3e; color: #f5f0e8; border: none; border-radius: 4px; font-size: 12px; font-family: Arial, sans-serif; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; }
+input[type="text"] { width: 100%; box-sizing: border-box; padding: 12px 16px; border: 1px solid #e8dece; border-radius: 4px; font-size: 18px; margin-bottom: 12px; text-align: center; background: #faf7f2; }
+button { width: 100%; padding: 13px; background: #3a5c3e; color: #f5f0e8; border: none; border-radius: 4px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; }
 
-/* RESULT CARD */
-.result-card { background: #fff9f3; border: 1px solid #b8913a; border-radius: 6px; padding: 30px; position: relative; }
-.result-card .topbar { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #b8913a; border-radius: 6px 6px 0 0; }
-.gname { font-size: 30px; font-style: italic; margin: 10px 0 20px; }
-
-/* FULL BALLROOM LAYOUT (Previous View) */
+/* BALLROOM GRID LAYOUT */
 .ballroom { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; background: #fff; border: 1px solid #e8dece; border-radius: 8px; margin: 20px 0; }
 .stage-label { grid-column: span 3; background: #f0f0f0; padding: 5px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; color: #888; }
 .table-icon { width: 45px; height: 45px; border-radius: 50%; border: 1px solid #e8dece; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 11px; background: white; transition: 0.3s; font-family: Arial, sans-serif; }
 .table-rect-icon { border-radius: 4px; width: 60px; }
 
-/* ZOOMED TABLE VIEW (New Chair View) */
+/* ZOOMED TABLE VIEW */
 .table-detail-container { position: relative; width: 220px; height: 220px; margin: 30px auto; }
-.main-table { position: absolute; background: #f5ead5; border: 2px solid #b8913a; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 2; font-family: Georgia, serif; }
+.main-table { position: absolute; background: #f5ead5; border: 2px solid #b8913a; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 2; }
 .circle-t { top: 60px; left: 60px; width: 100px; height: 100px; border-radius: 50%; }
 .rect-t { top: 70px; left: 30px; width: 160px; height: 80px; border-radius: 4px; }
 .sweet-t { top: 80px; left: 60px; width: 100px; height: 60px; border-radius: 4px; }
-
-.chair { position: absolute; width: 26px; height: 26px; background: white; border: 1px solid #e8dece; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: 0.4s; z-index: 1; font-family: Arial, sans-serif; }
+.chair { position: absolute; width: 26px; height: 26px; background: white; border: 1px solid #e8dece; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; z-index: 1; }
 .glow { background: #b8913a !important; color: white !important; border-color: #8a6d3b !important; transform: scale(1.2); box-shadow: 0 0 15px rgba(184,145,58,0.6); }
 
 .again { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #b8913a; cursor: pointer; text-decoration: underline; display: block; margin-top: 20px; }
@@ -49,7 +42,7 @@ footer { margin-top: 40px; font-size: 11px; color: #d8cebc; }
   <hr class="divider">
   
   <div class="card" id="search-card">
-    <p>Search your name to find your table and seat.</p>
+    <p>Search your name to see your layout.</p>
     <input type="text" id="search-input" placeholder="Your name..." autocomplete="off">
     <button onclick="doSearch()">Find My Seat</button>
   </div>
@@ -82,17 +75,16 @@ function doSearch() {
   var matches = guests.filter(g => g.name.toLowerCase().includes(raw));
   var area = document.getElementById('result-area');
   if (matches.length === 0) {
-    area.innerHTML = '<div class="card"><h3>Not Found</h3><p>Please check your spelling.</p></div>';
+    area.innerHTML = '<div class="card"><h3>Name not found</h3><span class="again" onclick="reset()">Try again</span></div>';
   } else if (matches.length === 1) {
     showResult(matches[0]);
   } else {
     var items = matches.map(g => `<div style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;" onclick='showResult(${JSON.stringify(g)})'>${g.name}</div>`).join('');
-    area.innerHTML = '<div class="card"><h3>Select Your Name</h3>' + items + '</div>';
+    area.innerHTML = '<div class="card"><h3>Multiple matches</h3>' + items + '</div>';
   }
 }
 
 function showResult(g) {
-  // 1. Generate Ballroom Grid
   const tables = ['Sweetheart', 'VIP A', 'VIP B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
   let ballroomHTML = `<div class="ballroom"><div class="stage-label">Stage / Pelamin</div>`;
   tables.forEach(t => {
@@ -101,11 +93,7 @@ function showResult(g) {
   });
   ballroomHTML += `</div>`;
 
-  // 2. Generate Detailed Table View
-  let tableType = 'circle';
-  if (g.table === 'Sweetheart') tableType = 'sweetheart';
-  else if (g.table.includes('VIP')) tableType = 'vip';
-
+  let tableType = g.table === 'Sweetheart' ? 'sweetheart' : (g.table.includes('VIP') ? 'vip' : 'circle');
   let chairMap = "";
   if (tableType === 'sweetheart') {
     chairMap = `<div class="main-table sweet-t">Table ${g.table}</div>
@@ -129,13 +117,10 @@ function showResult(g) {
     <div class="result-card"><div class="topbar"></div>
       <div class="gname">${g.name}</div>
       <div class="tag">Table ${g.table} &middot; Seat ${g.seat}</div>
-      
       <div class="tag">Ballroom Location</div>
       ${ballroomHTML}
-
       <div class="tag">Table View</div>
       <div class="table-detail-container">${chairMap}</div>
-      
       <span class="again" onclick="reset()">Search Again</span>
     </div>`;
 
