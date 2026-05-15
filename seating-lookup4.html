@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danish &amp; Qistina - Find Your Seat</title>
+<style>
+body { margin: 0; padding: 0; font-family: Georgia, serif; background: #faf7f2; color: #2a2218; }
+.page { max-width: 480px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+.tag { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #b8913a; margin-bottom: 10px; font-family: Arial, sans-serif; }
+.couple { font-size: 48px; font-style: italic; font-weight: normal; margin: 0 0 8px; }
+.meta { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #8a7e6e; font-family: Arial, sans-serif; margin-bottom: 30px; }
+.divider { border: none; border-top: 1px solid #e8dece; margin: 20px auto; width: 200px; }
+.card { background: #fff9f3; border: 1px solid #e8dece; border-radius: 6px; padding: 30px; margin-bottom: 20px; }
+.card p { font-size: 14px; color: #8a7e6e; font-family: Arial, sans-serif; margin: 0 0 20px; line-height: 1.6; }
+input[type="text"] { width: 100%; box-sizing: border-box; padding: 12px 16px; border: 1px solid #e8dece; border-radius: 4px; font-size: 18px; font-family: Georgia, serif; text-align: center; background: #faf7f2; color: #2a2218; margin-bottom: 12px; display: block; }
+input[type="text"]:focus { outline: none; border-color: #b8913a; box-shadow: 0 0 0 3px rgba(184,145,58,0.15); }
+button { width: 100%; padding: 13px; background: #3a5c3e; color: #f5f0e8; border: none; border-radius: 4px; font-size: 12px; font-family: Arial, sans-serif; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; }
+button:hover { background: #4e7a53; }
+.result-card { background: #fff9f3; border: 1px solid #b8913a; border-radius: 6px; padding: 30px; position: relative; }
+.result-card .topbar { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #b8913a; border-radius: 6px 6px 0 0; }
+.welcome { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #8a7e6e; font-family: Arial, sans-serif; margin-bottom: 6px; }
+.gname { font-size: 30px; font-style: italic; margin: 0 0 20px; }
+.seat-block { display: inline-block; background: #f5ead5; border: 1px solid rgba(184,145,58,0.4); border-radius: 4px; padding: 16px 50px; margin-bottom: 16px; }
+.seat-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #b8913a; font-family: Arial, sans-serif; margin-bottom: 6px; font-weight: bold; }
+.table-name { font-size: 48px; font-weight: normal; line-height: 1; }
+.seat-num { font-size: 13px; color: #8a7e6e; font-family: Arial, sans-serif; margin-top: 4px; }
+.again { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #b8913a; cursor: pointer; font-family: Arial, sans-serif; text-decoration: underline; }
+.nf-card { background: #fff9f3; border: 1px solid #e8dece; border-radius: 6px; padding: 30px; }
+.nf-card h3 { font-size: 22px; font-weight: normal; margin: 0 0 10px; }
+.nf-card p { font-size: 14px; color: #8a7e6e; font-family: Arial, sans-serif; margin: 0 0 16px; line-height: 1.6; }
+.match-list { border: 1px solid #e8dece; border-radius: 4px; overflow: hidden; margin-bottom: 16px; text-align: left; }
+.match-item { padding: 12px 16px; border-bottom: 1px solid #e8dece; cursor: pointer; }
+.match-item:last-child { border-bottom: none; }
+.match-item:hover { background: #f5ead5; }
+.mi-name { font-size: 16px; font-weight: bold; font-family: Arial, sans-serif; }
+.mi-sub { font-size: 13px; color: #8a7e6e; font-family: Arial, sans-serif; margin-top: 2px; }
+footer { margin-top: 40px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #d8cebc; font-family: Arial, sans-serif; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="tag">Tying the Knot</div>
+  <h1 class="couple">Danish &amp; Qistina</h1>
+  <div class="meta">2 October 2027 &nbsp;&middot;&nbsp; Grand Hyatt Singapore</div>
+  <hr class="divider">
+
+  <div class="card" id="search-card">
+    <p>Enter your name to find your table and seat for the wedding dinner.</p>
+    <input type="text" id="search-input" placeholder="Your name..." autocomplete="off">
+    <button onclick="doSearch()">Find My Seat</button>
+  </div>
+
+  <div id="result-area"></div>
+
+  <footer>Danish &amp; Qistina &middot; 2 October 2027</footer>
+</div>
+
+<script>
+var guests = [
+  {name:"Danish Iryandy",table:"VIP",seat:1},
+  {name:"Qistina Imran",table:"VIP",seat:2},
+  {name:"Hantu Makkau",table:"VIP",seat:3},
+  {name:"Alif Tan",table:"VIP",seat:4},
+  {name:"Mira Lim",table:"VIP",seat:5},
+  {name:"Johan Ng",table:"VIP",seat:6},
+  {name:"Siti Lee",table:"VIP",seat:7},
+  {name:"Faris Wong",table:"VIP",seat:8},
+  {name:"Leena Koh",table:"VIP",seat:9},
+  {name:"Hakim Goh",table:"VIP",seat:10},
+  {name:"Aina Chua",table:"A",seat:1},
+  {name:"Amir Yeo",table:"A",seat:2},
+  {name:"Sara Ong",table:"A",seat:3},
+  {name:"Zaki Teo",table:"A",seat:4},
+  {name:"Nadia Ho",table:"A",seat:5},
+  {name:"Hafiz Kwan",table:"A",seat:6},
+  {name:"Bella Cheong",table:"A",seat:7},
+  {name:"Yusof Tay",table:"A",seat:8},
+  {name:"Izzah Low",table:"A",seat:9},
+  {name:"Raihan Seow",table:"A",seat:10},
+  {name:"Sofea Sim",table:"B",seat:1},
+  {name:"Faiz Chng",table:"B",seat:2},
+  {name:"Nurul Pang",table:"B",seat:3},
+  {name:"Danishah Loh",table:"B",seat:4},
+  {name:"Sophia Foo",table:"B",seat:5},
+  {name:"Felix Chan",table:"B",seat:6},
+  {name:"Nora Lai",table:"B",seat:7},
+  {name:"Daniel Chew",table:"B",seat:8},
+  {name:"Anna Ang",table:"B",seat:9},
+  {name:"Amir Quek",table:"B",seat:10},
+  {name:"Sarah Soon",table:"C",seat:1},
+  {name:"Zach Tanaka",table:"C",seat:2},
+  {name:"Natalie Suzuki",table:"C",seat:3},
+  {name:"Henry Sato",table:"C",seat:4},
+  {name:"Bella Kim",table:"C",seat:5},
+  {name:"Joseph Park",table:"C",seat:6},
+  {name:"Isabel Nguyen",table:"C",seat:7},
+  {name:"Ryan Tran",table:"C",seat:8},
+  {name:"Felix Ali",table:"C",seat:9},
+  {name:"Sophia Hassan",table:"C",seat:10},
+  {name:"Felix Ibrahim",table:"D",seat:1},
+  {name:"Nora Khan",table:"D",seat:2},
+  {name:"Daniel Singh",table:"D",seat:3},
+  {name:"Anna Patel",table:"D",seat:4},
+  {name:"Calum Hood",table:"D",seat:5},
+  {name:"Micheal Clifford",table:"D",seat:6},
+  {name:"Ashton Irwin",table:"D",seat:7},
+  {name:"Luke Hemmings",table:"D",seat:8},
+  {name:"Aiden Fernandez",table:"D",seat:9},
+  {name:"Sophia Ramirez",table:"D",seat:10},
+  {name:"Lucas Gutierrez",table:"E",seat:1},
+  {name:"Emma Mendoza",table:"E",seat:2},
+  {name:"Noah Salazar",table:"E",seat:3},
+  {name:"Olivia Vargas",table:"E",seat:4},
+  {name:"Ethan Navarro",table:"E",seat:5},
+  {name:"Mia Castillo",table:"E",seat:6},
+  {name:"Liam Delgado",table:"E",seat:7},
+  {name:"Ava Reyes",table:"E",seat:8},
+  {name:"Mason Morales",table:"E",seat:9},
+  {name:"Isabella Cruz",table:"E",seat:10},
+  {name:"Logan Santos",table:"F",seat:1},
+  {name:"Charlotte Rivera",table:"F",seat:2},
+  {name:"James Ortiz",table:"F",seat:3},
+  {name:"Amelia Flores",table:"F",seat:4},
+  {name:"Benjamin Ramos",table:"F",seat:5},
+  {name:"Harper Vasquez",table:"F",seat:6},
+  {name:"Elijah Torres",table:"F",seat:7},
+  {name:"Evelyn Molina",table:"F",seat:8},
+  {name:"Daniel Acosta",table:"F",seat:9},
+  {name:"Abigail Silva",table:"F",seat:10},
+  {name:"Matthew Pereira",table:"G",seat:1},
+  {name:"Ella Costa",table:"G",seat:2},
+  {name:"Jackson Ribeiro",table:"G",seat:3},
+  {name:"Scarlett Almeida",table:"G",seat:4},
+  {name:"Sebastian Moreira",table:"G",seat:5},
+  {name:"Grace Barbosa",table:"G",seat:6},
+  {name:"David Nakamura",table:"G",seat:7},
+  {name:"Chloe Yamamoto",table:"G",seat:8},
+  {name:"Joseph Kobayashi",table:"G",seat:9},
+  {name:"Lily Watanabe",table:"G",seat:10},
+  {name:"Samuel Ito",table:"H",seat:1},
+  {name:"Aria Fujita",table:"H",seat:2},
+  {name:"Henry Mori",table:"H",seat:3},
+  {name:"Layla Sakamoto",table:"H",seat:4},
+  {name:"Owen Okada",table:"H",seat:5},
+  {name:"Zoey Hassan",table:"H",seat:6},
+  {name:"Wyatt Abdullah",table:"H",seat:7},
+  {name:"Nora Mahmoud",table:"H",seat:8},
+  {name:"Jack Farouk",table:"H",seat:9},
+  {name:"Hannah Zaki",table:"H",seat:10},
+  {name:"Leo Hussein",table:"I",seat:1},
+  {name:"Avery Omar",table:"I",seat:2},
+  {name:"Julian Youssef",table:"I",seat:3},
+  {name:"Sofia Rahman",table:"I",seat:4},
+  {name:"Luke Chowdhury",table:"I",seat:5},
+  {name:"Camila Ahmed",table:"I",seat:6},
+  {name:"Isaac Das",table:"I",seat:7},
+  {name:"Aurora Bose",table:"I",seat:8},
+  {name:"Gabriel Iyer",table:"I",seat:9},
+  {name:"Victoria Reddy",table:"I",seat:10},
+  {name:"Anthony Sharma",table:"J",seat:1},
+  {name:"Riley Mehta",table:"J",seat:2},
+  {name:"Dylan Kapoor",table:"J",seat:3},
+  {name:"Penelope Verma",table:"J",seat:4},
+  {name:"Andrew Cheng",table:"J",seat:5},
+  {name:"Luna Zhang",table:"J",seat:6},
+  {name:"Joshua Liu",table:"J",seat:7},
+  {name:"Ellie Wang",table:"J",seat:8},
+  {name:"Christopher Chen",table:"J",seat:9},
+  {name:"Stella Huang",table:"J",seat:10},
+  {name:"Nathan Lin",table:"K",seat:1},
+  {name:"Hazel Zhou",table:"K",seat:2},
+  {name:"Caleb Wu",table:"K",seat:3},
+  {name:"Paisley Li",table:"K",seat:4},
+  {name:"Ryan Xu",table:"K",seat:5},
+  {name:"Violet Zhao",table:"K",seat:6},
+  {name:"Adrian Yang",table:"K",seat:7},
+  {name:"Naomi Sun",table:"K",seat:8},
+  {name:"Thomas Gupta",table:"K",seat:9},
+  {name:"Elena Nair",table:"K",seat:10}
+];
+
+var multi = [];
+
+document.getElementById('search-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSearch();
+});
+
+function doSearch() {
+  var raw = document.getElementById('search-input').value.trim();
+  if (!raw) return;
+  var words = raw.toLowerCase().split(/\s+/);
+  var matches = guests.filter(function(g) {
+    var n = g.name.toLowerCase();
+    return words.every(function(w) { return n.indexOf(w) !== -1; });
+  });
+  var area = document.getElementById('result-area');
+  if (matches.length === 0) {
+    area.innerHTML = '<div class="nf-card"><h3>Name not found</h3><p>We could not find "' + raw + '" on the guest list. Try a different spelling or check with the coordinator.</p><span class="again" onclick="reset()">Try again</span></div>';
+  } else if (matches.length === 1) {
+    showResult(matches[0]);
+  } else {
+    multi = matches;
+    var items = '';
+    for (var i = 0; i < matches.length; i++) {
+      items += '<div class="match-item" onclick="pick(' + i + ')"><div class="mi-name">' + matches[i].name + '</div><div class="mi-sub">Table ' + matches[i].table + ' &middot; Seat ' + matches[i].seat + '</div></div>';
+    }
+    area.innerHTML = '<div class="nf-card"><h3>Multiple matches</h3><p>Please select your name:</p><div class="match-list">' + items + '</div><span class="again" onclick="reset()">Search again</span></div>';
+  }
+}
+
+function pick(i) { showResult(multi[i]); }
+
+function showResult(g) {
+  document.getElementById('result-area').innerHTML =
+    '<div class="result-card"><div class="topbar"></div>' +
+    '<div class="welcome">Welcome</div>' +
+    '<div class="gname">' + g.name + '</div>' +
+    '<div class="seat-block"><div class="seat-label">Your Table</div><div class="table-name">' + g.table + '</div><div class="seat-num">Seat ' + g.seat + '</div></div><br><br>' +
+    '<span class="again" onclick="reset()">Search for another guest</span></div>';
+}
+
+function reset() {
+  document.getElementById('result-area').innerHTML = '';
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-input').focus();
+}
+</script>
+</body>
+</html>
