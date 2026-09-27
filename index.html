@@ -13,14 +13,12 @@ body { margin: 0; padding: 0; font-family: Georgia, serif; background: #faf7f2; 
 .couple { font-size: 48px; font-style: italic; font-weight: normal; margin: 0 0 8px; }
 .meta { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #8a7e6e; font-family: Arial, sans-serif; margin-bottom: 30px; }
 .divider { border: none; border-top: 1px solid #e8dece; margin: 20px auto; width: 200px; }
-.card, .result-card { background: #fff9f3; border: 1px solid #e8dece; border-radius: 12px; padding: 32px 28px; margin-bottom: 20px; }
+.card { background: #fff9f3; border: 1px solid #e8dece; border-radius: 12px; padding: 32px 28px; margin-bottom: 20px; }
 .card p { font-family: Georgia, serif; font-size: 16px; color: #6b5e4e; margin: 0 0 20px; line-height: 1.5; }
-
 input[type="text"] { width: 100%; box-sizing: border-box; padding: 16px 20px; border: 1px solid #ddd3c3; border-radius: 8px; font-size: 22px; margin-bottom: 14px; text-align: center; background: #fefcf9; font-family: Georgia, serif; color: #2a2218; outline: none; transition: border-color 0.2s; }
 input[type="text"]:focus { border-color: #b8913a; }
 button { width: 100%; padding: 16px; background: #3a5c3e; color: #f5f0e8; border: none; border-radius: 8px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-family: Arial, sans-serif; font-weight: bold; transition: background 0.2s; }
 button:hover { background: #2e4a32; }
-
 .match-list { margin: 16px 0 0; border: 1px solid #e8dece; border-radius: 8px; overflow: hidden; }
 .match-item { padding: 14px 18px; cursor: pointer; border-bottom: 1px solid #e8dece; text-align: left; background: #fefcf9; transition: background 0.15s; font-family: Arial, sans-serif; }
 .match-item:last-child { border-bottom: none; }
@@ -32,6 +30,7 @@ button:hover { background: #2e4a32; }
 .ballroom { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px; background: #fff; border: 1px solid #e8dece; border-radius: 8px; margin: 20px 0; align-items: center; justify-items: center; }
 .stage-label { grid-column: span 3; background: #f0f0f0; padding: 6px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; color: #888; font-family: Arial, sans-serif; text-align: center; width: 100%; box-sizing: border-box; }
 
+/* UNIFIED FONT FOR ALL TABLE LABELS */
 .table-icon { 
     width: 52px; 
     height: 52px; 
@@ -53,7 +52,7 @@ button:hover { background: #2e4a32; }
 }
 .table-rect-icon { border-radius: 4px; width: 72px; font-size: 10px; }
 
-.table-detail-container { position: relative; width: 220px; height: 220px; margin: 30px auto; }
+.table-detail-container { position: relative; width: 220px; height: 200px; margin: 10px auto 30px; }
 .main-table { 
     position: absolute; 
     background: #f5ead5; 
@@ -71,9 +70,14 @@ button:hover { background: #2e4a32; }
 }
 .circle-t { top: 60px; left: 60px; width: 100px; height: 100px; border-radius: 50%; }
 .rect-t { top: 70px; left: 20px; width: 180px; height: 80px; border-radius: 4px; }
-.sweet-t { top: 80px; left: 50px; width: 120px; height: 60px; border-radius: 4px; }
+.sweet-t { display: none; } /* replaced by SVG heart */
+.heart-svg { position: absolute; top: 0; left: 0; width: 220px; height: 200px; z-index: 2; }
 .chair { position: absolute; width: 26px; height: 26px; background: white; border: 1px solid #e8dece; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; z-index: 1; font-family: Arial, sans-serif; }
 .glow { background: #b8913a !important; color: white !important; border-color: #8a6d3b !important; transform: scale(1.2); box-shadow: 0 0 15px rgba(184,145,58,0.6); }
+/* Sweetheart ballroom icon: only glow the heart SVG, not the box */
+#ball-t-Sweetheart.glow { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
+#ball-t-Sweetheart.glow svg path { fill: #b8913a !important; stroke: #8a6d3b !important; }
+#ball-t-Sweetheart.glow svg text { fill: white !important; }
 
 .again { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #b8913a; cursor: pointer; text-decoration: underline; display: block; margin-top: 20px; font-family: Arial, sans-serif;}
 footer { margin-top: 40px; font-size: 11px; color: #d8cebc; font-family: Arial, sans-serif; letter-spacing: 1px;}
@@ -87,7 +91,7 @@ footer { margin-top: 40px; font-size: 11px; color: #d8cebc; font-family: Arial, 
   <hr class="divider">
   
   <div class="card" id="search-card">
-    <p>Enter your name to find your table and seat for the wedding lunch.</p>
+    <p>Enter your name to find your table and seat for the wedding dinner.</p>
     <input type="text" id="search-input" placeholder="Your name..." autocomplete="off">
     <button onclick="doSearch()">Find My Seat</button>
   </div>
@@ -137,17 +141,36 @@ function showResult(g) {
   const tables = ['Sweetheart', 'VIP A', 'VIP B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
   let ballroomHTML = `<div class="ballroom"><div class="stage-label">Stage</div>`;
   tables.forEach(t => {
-    let className = t.includes('VIP') || t === 'Sweetheart' ? 'table-icon table-rect-icon' : 'table-icon';
-    ballroomHTML += `<div class="${className}" id="ball-t-${t.replace(/\s+/g, '')}">${t}</div>`;
+    if (t === 'Sweetheart') {
+      ballroomHTML += `<div class="table-icon" id="ball-t-Sweetheart" style="background:transparent; border:none; overflow:visible; padding:0; width:56px; height:52px;">
+        <svg viewBox="0 0 72 60" width="56" height="52" xmlns="http://www.w3.org/2000/svg">
+          <path d="M36,50 C16,34 4,24 4,13 C4,5 11,0 20,0 C27,0 32,5 36,10 C40,5 45,0 52,0 C61,0 68,5 68,13 C68,24 56,34 36,50 Z" fill="white" stroke="#e8dece" stroke-width="1.5"/>
+          <text x="36" y="28" text-anchor="middle" font-family="Arial,sans-serif" font-size="6.5" font-weight="bold" fill="#5a4e3e" letter-spacing="0.3">SWEETHEART</text>
+        </svg>
+      </div>`;
+    } else {
+      let className = t.includes('VIP') ? 'table-icon table-rect-icon' : 'table-icon';
+      ballroomHTML += `<div class="${className}" id="ball-t-${t.replace(/\s+/g, '')}">${t}</div>`;
+    }
   });
   ballroomHTML += `</div>`;
 
   let tableType = g.table === 'Sweetheart' ? 'sweetheart' : (g.table.includes('VIP') ? 'vip' : 'circle');
   let chairMap = "";
   if (tableType === 'sweetheart') {
-    chairMap = `<div class="main-table sweet-t">${g.table}</div>
-                <div class="chair" id="s-1" style="left:75px; top:45px">1</div>
-                <div class="chair" id="s-2" style="left:115px; top:45px">2</div>`;
+    chairMap = `
+      <svg class="heart-svg" viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Heart smaller, sits lower, more room for chairs at top -->
+        <path d="M110,178 C68,152 46,130 46,106 C46,87 60,74 78,74 C91,74 102,81 110,90 C118,81 129,74 142,74 C160,74 174,87 174,106 C174,130 152,152 110,178 Z"
+              fill="#f5ead5" stroke="#b8913a" stroke-width="2"/>
+        <text x="110" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#5a4e3e" letter-spacing="2">SWEETHEART</text>
+        <!-- Chair 1 above left lobe, more separated -->
+        <circle id="s-1" cx="72" cy="48" r="14" fill="white" stroke="#e8dece" stroke-width="1"/>
+        <text x="72" y="53" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#2a2218">1</text>
+        <!-- Chair 2 above right lobe, more separated -->
+        <circle id="s-2" cx="148" cy="48" r="14" fill="white" stroke="#e8dece" stroke-width="1"/>
+        <text x="148" y="53" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#2a2218">2</text>
+      </svg>`;
   } else if (tableType === 'vip') {
     chairMap = `<div class="main-table rect-t">${g.table}</div>
                 ${[1,2,3,4,5].map((s,i) => `<div class="chair" id="s-${s}" style="left:${35 + i*32}px; top:35px">${s}</div>`).join('')}
@@ -163,7 +186,7 @@ function showResult(g) {
   }
 
   document.getElementById('result-area').innerHTML = `
-    <div class="result-card">
+    <div class="result-card"><div class="topbar"></div>
       <div class="gname">${g.name}</div>
       <div class="seat-info">Table ${g.table} &nbsp;&middot;&nbsp; Seat ${g.seat}</div>
       <div class="tag">Ballroom Layout</div>
@@ -176,7 +199,19 @@ function showResult(g) {
   setTimeout(() => { 
     const ballTable = document.getElementById('ball-t-' + g.table.replace(/\s+/g, ''));
     if (ballTable) ballTable.classList.add('glow');
-    document.getElementById('s-' + g.seat).classList.add('glow'); 
+    const seatEl = document.getElementById('s-' + g.seat);
+    if (seatEl) {
+      if (seatEl.tagName === 'circle') {
+        // SVG circle — style directly
+        seatEl.setAttribute('fill', '#b8913a');
+        seatEl.setAttribute('stroke', '#8a6d3b');
+        // also colour the text sibling
+        const next = seatEl.nextElementSibling;
+        if (next) next.setAttribute('fill', 'white');
+      } else {
+        seatEl.classList.add('glow');
+      }
+    }
   }, 100);
 }
 
